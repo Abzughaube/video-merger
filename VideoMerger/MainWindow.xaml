@@ -16,7 +16,12 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <ListView x:Name="inputFilesListView" Grid.Row="0" Margin="10" SelectionMode="Extended">
+                <ListView Grid.Row="0" Margin="10" SelectionMode="Extended" AllowDrop="True"
+                          PreviewMouseLeftButtonDown="inputFilesListView_PreviewMouseLeftButtonDown" 
+                          PreviewMouseMove="inputFilesListView_PreviewMouseMove" 
+                          Drop="inputFilesListView_Drop"
+                          ItemsSource="{Binding FileItems}"
+                          SelectedItem="{Binding SelectedItem}">
                     <!--<ListView.View>
                         <GridView>
                             <GridViewColumn Header="Input Files" Width="Auto" DisplayMemberBinding="{Binding}"/>
@@ -25,7 +30,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Image Width="150"><!--Source="{Binding PreviewImage}"-->
+                                <Image Width="150">
                                     <Image.Source>
                                         <BitmapImage UriSource="{Binding PreviewImagePath}"/>
                                     </Image.Source>
@@ -48,8 +53,4 @@
             <TextBox Name="LogBox" IsReadOnly="True" Text="{Binding ElementName=textBox1, Path=Text}"/>
         </TabItem>
     </TabControl>
-
-
-
-
 </Window>

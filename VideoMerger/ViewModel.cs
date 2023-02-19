@@ -1,15 +1,29 @@
-﻿using System.Drawing;
+﻿using System.Collections.ObjectModel;
 
 namespace VideoMerger
 {
-    internal class ViewModel
+    public class ViewModel : ViewModelBase
     {
-    }
+        private ObservableCollection<FileItem> fileItems = new ObservableCollection<FileItem>();
+        public ObservableCollection<FileItem> FileItems
+        {
+            get => fileItems;
+            set
+            {
+                fileItems = value;
+                OnPropertyChanged();
+            }
+        }
 
-    internal class FileItem
-    {
-        public string FilePath { get; set; }
-        public string PreviewImagePath { get; set; }
+        private FileItem selectedItem;
+        public FileItem SelectedItem
+        {
+            get => selectedItem;
+            set
+            {
+                selectedItem = value;
+                OnPropertyChanged();
+            }
+        }
     }
-
 }

@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using Microsoft.Win32;
+using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Windows.Input;
-using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Linq;
 
 namespace VideoMerger
 {
@@ -15,13 +16,26 @@ namespace VideoMerger
     /// </summary>
     public partial class MainWindow : Window
     {
-        internal ViewModel ViewModel { get; set; } = new ViewModel();
-
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = ViewModel;
         }
+
+        //private void addInputFileButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var openFileDialog = new OpenFileDialog();
+        //    openFileDialog.Filter = "MP4 Files (*.mp4)|*.mp4|MPEG Files (*.mpg)|*.mpg|All Files (*.*)|*.*";
+        //    openFileDialog.Multiselect = true;
+        //    if (openFileDialog.ShowDialog() == true)
+        //    {
+        //        foreach (var file in openFileDialog.FileNames)
+        //        {
+        //            inputFilesListView.Items.Add(file);
+        //        }
+        //    }
+        //}
+
+        //private List<Bitmap> _previewImages = new List<Bitmap>();
 
         private void addInputFileButton_Click(object sender, RoutedEventArgs e)
         {
@@ -36,7 +50,7 @@ namespace VideoMerger
                     VideoTooling.Ffmpeg.CreateVideoPreview(file, previewImagePath, out var processOutput);
                     var fileItem = new FileItem { FilePath = file, PreviewImagePath = previewImagePath };
                     LogBox.AppendText(processOutput);
-                    ViewModel.FileItems.Add(fileItem);
+                    inputFilesListView.Items.Add(fileItem);
                 }
             }
 
@@ -44,9 +58,9 @@ namespace VideoMerger
 
         private void removeInputFileButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.SelectedItem != null)
+            if (inputFilesListView.SelectedIndex != -1)
             {
-                ViewModel.FileItems.Remove(ViewModel.SelectedItem);
+                inputFilesListView.Items.RemoveAt(inputFilesListView.SelectedIndex);
             }
         }
 
@@ -60,7 +74,7 @@ namespace VideoMerger
                 using (var file = new StreamWriter("files.txt"))
                 {
                     // Write the list of input files to the file
-                    foreach (var inputFile in ViewModel.FileItems)
+                    foreach (var inputFile in inputFilesListView.Items.Cast<FileItem>())
                     {
                         file.WriteLine("file '" + inputFile.FilePath + "'");
                     }
@@ -85,56 +99,26 @@ namespace VideoMerger
         }
         private void moveUpButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.SelectedItem != null)
+            if (inputFilesListView.SelectedIndex > 0)
             {
-                var index = ViewModel.FileItems.IndexOf(ViewModel.SelectedItem);
-                ViewModel.FileItems.Remove(ViewModel.SelectedItem);
-                ViewModel.FileItems.Insert(index - 1, ViewModel.SelectedItem);
-                ViewModel.SelectedItem = ViewModel.SelectedItem;
+                var selected = inputFilesListView.SelectedItem;
+                var index = inputFilesListView.SelectedIndex;
+                inputFilesListView.Items.RemoveAt(index);
+                inputFilesListView.Items.Insert(index - 1, selected);
+                inputFilesListView.SelectedIndex = index - 1;
             }
         }
         private void moveDownButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.SelectedItem != null && ViewModel.FileItems.IndexOf(ViewModel.SelectedItem) < ViewModel.FileItems.Count - 1)
+            if (inputFilesListView.SelectedIndex != -1 && inputFilesListView.SelectedIndex < inputFilesListView.Items.Count - 1)
             {
-                var index = ViewModel.FileItems.IndexOf(ViewModel.SelectedItem);
-                ViewModel.FileItems.Remove(ViewModel.SelectedItem);
-                ViewModel.FileItems.Insert(index + 1, ViewModel.SelectedItem);
-                ViewModel.SelectedItem = ViewModel.SelectedItem;
+                var selected = inputFilesListView.SelectedItem;
+                var index = inputFilesListView.SelectedIndex;
+                inputFilesListView.Items.RemoveAt(index);
+                inputFilesListView.Items.Insert(index + 1, selected);
+                inputFilesListView.SelectedIndex = index + 1;
             }
         }
 
-        private System.Windows.Point _startPoint;
-        private void inputFilesListView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            _startPoint = e.GetPosition(null);
-        }
-        private void inputFilesListView_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed && (Math.Abs(e.GetPosition(null).X - _startPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                Math.Abs(e.GetPosition(null).Y - _startPoint.Y) > SystemParameters.MinimumVerticalDragDistance))
-            {
-                if (ViewModel.SelectedItem != null)
-                {
-                    var data = new DataObject("FileItem", ViewModel.SelectedItem);
-                    DragDrop.DoDragDrop(sender as ListView, data, DragDropEffects.Move);
-                }
-            }
-        }
-
-        private void inputFilesListView_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                var fileItem = (FileItem)e.Data.GetData(DataFormats.FileDrop);
-                var droppedOn = UIHelper.FindVisualParent<ListViewItem>(sender as DependencyObject);
-                if (droppedOn == null) { return; }
-                var droppedFileItem = droppedOn.DataContext as FileItem;
-                var droppedIndex = this.ViewModel.FileItems.IndexOf(droppedFileItem);
-
-                ViewModel.FileItems.Remove(fileItem);
-                ViewModel.FileItems.Insert(droppedIndex, fileItem);
-            }
-        }
     }
 }

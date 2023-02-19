@@ -38,8 +38,8 @@ namespace VideoTooling
             var ffmpeg = new Process();
             ffmpeg.StartInfo.FileName = @"D:\Temp\ffmpeg-5.1.2-full_build\bin\ffmpeg.exe";
             ffmpeg.StartInfo.Arguments = $"-y -i \"{videoFilePath}\" -ss 00:00:01.000 -vframes 1 \"{previewImagePath}\"";
-            ffmpeg.StartInfo.UseShellExecute = false;
-            ffmpeg.StartInfo.CreateNoWindow = true;
+            //ffmpeg.StartInfo.UseShellExecute = false;
+            //ffmpeg.StartInfo.CreateNoWindow = true;
             //ffmpeg.StartInfo.RedirectStandardOutput = true;
             //ffmpeg.StartInfo.RedirectStandardError = true;
 
