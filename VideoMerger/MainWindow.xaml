@@ -19,7 +19,6 @@
                 <ListView Grid.Row="0" Margin="10" SelectionMode="Extended" AllowDrop="True"
                           PreviewMouseLeftButtonDown="inputFilesListView_PreviewMouseLeftButtonDown" 
                           PreviewMouseMove="inputFilesListView_PreviewMouseMove" 
-                          Drop="inputFilesListView_Drop"
                           ItemsSource="{Binding FileItems}"
                           SelectedItem="{Binding SelectedItem}">
                     <!--<ListView.View>
@@ -29,7 +28,7 @@
                     </ListView.View>-->
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" Drop="inputFilesListView_Drop">
                                 <Image Width="150">
                                     <Image.Source>
                                         <BitmapImage UriSource="{Binding PreviewImagePath}"/>

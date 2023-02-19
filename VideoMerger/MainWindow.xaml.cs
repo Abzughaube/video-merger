@@ -124,9 +124,9 @@ namespace VideoMerger
 
         private void inputFilesListView_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (e.Data.GetDataPresent("FileItem"))
             {
-                var fileItem = (FileItem)e.Data.GetData(DataFormats.FileDrop);
+                var fileItem = (FileItem)e.Data.GetData("FileItem");
                 var droppedOn = UIHelper.FindVisualParent<ListViewItem>(sender as DependencyObject);
                 if (droppedOn == null) { return; }
                 var droppedFileItem = droppedOn.DataContext as FileItem;
