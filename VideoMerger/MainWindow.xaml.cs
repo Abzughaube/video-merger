@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Media;
+using VideoTooling;
 
 namespace VideoMerger
 {
@@ -56,31 +57,7 @@ namespace VideoMerger
             saveFileDialog.Filter = "MP4 Files (*.mp4)|*.mp4|MPEG Files (*.mpg)|*.mpg|All Files (*.*)|*.*";
             if (saveFileDialog.ShowDialog() == true)
             {
-                // Create a new file to hold the list of input files
-                using (var file = new StreamWriter("files.txt"))
-                {
-                    // Write the list of input files to the file
-                    foreach (var inputFile in ViewModel.FileItems)
-                    {
-                        file.WriteLine("file '" + inputFile.FilePath + "'");
-                    }
-                }
-
-                var ffmpeg = new Process();
-                //ffmpeg.StartInfo.UseShellExecute = false;
-                //ffmpeg.StartInfo.CreateNoWindow = true;
-                ffmpeg.StartInfo.RedirectStandardOutput = true;
-                ffmpeg.StartInfo.RedirectStandardError = true;
-                ffmpeg.StartInfo.FileName = @"D:\Temp\ffmpeg-5.1.2-full_build\bin\ffmpeg.exe";
-                ffmpeg.StartInfo.Arguments = "-y -f concat -safe 0 -i files.txt -c copy \"" + saveFileDialog.FileName + "\"";
-
-                ffmpeg.Start();
-                var output = ffmpeg.StandardOutput.ReadToEnd();
-                var error = ffmpeg.StandardError.ReadToEnd();
-                LogBox.Text = output + Environment.NewLine + error;
-                ffmpeg.WaitForExit();
-
-                System.IO.File.Delete("files.txt");
+                Ffmpeg.MergeFiles(ViewModel.FileItems.Select(fi => fi.FilePath), saveFileDialog.FileName, out var shellOutput);
             }
         }
         private void moveUpButton_Click(object sender, RoutedEventArgs e)

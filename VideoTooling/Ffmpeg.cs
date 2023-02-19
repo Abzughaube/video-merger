@@ -1,36 +1,35 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
+using System.IO;
 
 namespace VideoTooling
 {
     public class Ffmpeg
     {
-        static void MergeFiles(string[] inputFilePaths, string outputPath)
+        public static void MergeFiles(IEnumerable<string> inputFilePaths, string outputPath, out string shellOutput)
         {
-            // Set the path of the output file
-            string outputFile = "output.mpg";
-            // Create a new process
             var ffmpeg = new Process();
-            // Set the filename of ffmpeg.exe
-            ffmpeg.StartInfo.FileName = "ffmpeg.exe";
-            // Use the concat filter to join the files
-            ffmpeg.StartInfo.Arguments = "-f concat -i files.txt -c copy " + outputFile;
-            // Create a new file to hold the list of input files
-            using (var file = new System.IO.StreamWriter("files.txt"))
+            //ffmpeg.StartInfo.UseShellExecute = false;
+            //ffmpeg.StartInfo.CreateNoWindow = true;
+            //ffmpeg.StartInfo.RedirectStandardOutput = true;
+            //ffmpeg.StartInfo.RedirectStandardError = true;
+            ffmpeg.StartInfo.FileName = @"D:\Temp\ffmpeg-5.1.2-full_build\bin\ffmpeg.exe";
+            ffmpeg.StartInfo.Arguments = "-y -f concat -safe 0 -i files.txt -c copy \"" + outputPath + "\"";
+            
+            const string parameterFile = "files.txt";
+            using (var file = new StreamWriter(parameterFile))
             {
-                // Write the list of input files to the file
                 foreach (var inputFile in inputFilePaths)
                 {
                     file.WriteLine("file '" + inputFile + "'");
                 }
             }
-            // Start the process
             ffmpeg.Start();
-            // Wait for the process to complete
+            shellOutput = string.Empty;
+            //shellOutput = ffmpeg.StandardOutput.ReadToEnd() + ffmpeg.StandardError.ReadToEnd();
             ffmpeg.WaitForExit();
-            // Clean up the file
-            System.IO.File.Delete("files.txt");
+            File.Delete(parameterFile);
         }
 
         public static void CreateVideoPreview(string videoFilePath, string previewImagePath, out string processOutput)
