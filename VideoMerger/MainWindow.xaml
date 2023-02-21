@@ -21,20 +21,20 @@
                           PreviewMouseMove="inputFilesListView_PreviewMouseMove" 
                           ItemsSource="{Binding FileItems}"
                           SelectedItem="{Binding SelectedItem}">
-                    <!--<ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Input Files" Width="Auto" DisplayMemberBinding="{Binding}"/>
-                        </GridView>
-                    </ListView.View>-->
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"></StackPanel>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Drop="inputFilesListView_Drop">
+                            <StackPanel Orientation="Vertical" Drop="inputFilesListView_Drop">
                                 <Image Width="150">
                                     <Image.Source>
                                         <BitmapImage UriSource="{Binding PreviewImagePath}"/>
                                     </Image.Source>
                                 </Image>
-                                <TextBlock Text="{Binding FilePath}" Margin="10,0,0,0"/>
+                                <!--<TextBlock Text="{Binding FilePath}" Margin="10,0,0,0"/>-->
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
