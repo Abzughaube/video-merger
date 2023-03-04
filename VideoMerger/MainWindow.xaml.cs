@@ -113,5 +113,6 @@ namespace VideoMerger
                 ViewModel.FileItems.Insert(droppedIndex, fileItem);
             }
         }
+
     }
 }

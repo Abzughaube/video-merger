@@ -6,6 +6,14 @@
         xmlns:local="clr-namespace:VideoMerger"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type local:FileItem}">
+            <local:MediaplayerControl FilePath="{Binding FilePath}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type x:NullExtension}">
+            <Button x:Name="addInputFileButton2" Margin="10" Content="Add Input File" Click="addInputFileButton_Click" />
+        </DataTemplate>
+    </Window.Resources>
     <TabControl>
         <TabItem Header="Merging">
             <Grid>
@@ -13,10 +21,11 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <ListView Grid.Row="0" Margin="10" SelectionMode="Extended" AllowDrop="True"
+                
+                <ContentControl Grid.Row="0" Content="{Binding SelectedItem}" />
+                
+                <ListView Grid.Row="1" Margin="10" SelectionMode="Extended" AllowDrop="True"
                           PreviewMouseLeftButtonDown="inputFilesListView_PreviewMouseLeftButtonDown" 
                           PreviewMouseMove="inputFilesListView_PreviewMouseMove" 
                           ItemsSource="{Binding FileItems}"
@@ -39,13 +48,13 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button x:Name="moveUpButton" Content="Move Up" Click="moveUpButton_Click"/>
-                    <Button x:Name="moveDownButton" Content="Move Down" Click="moveDownButton_Click"/>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="addInputFileButton" Margin="10" Content="Add Input File" Click="addInputFileButton_Click" />
+                    <Button x:Name="moveUpButton" Margin="10" Content="Move Up" Click="moveUpButton_Click"/>
+                    <Button x:Name="moveDownButton" Margin="10" Content="Move Down" Click="moveDownButton_Click"/>
+                    <Button x:Name="removeInputFileButton" Margin="10" Content="Remove Input File" Click="removeInputFileButton_Click" />
+                    <Button x:Name="mergeButton" Margin="10" Content="Merge" Click="mergeButton_Click" />
                 </StackPanel>
-                <Button x:Name="addInputFileButton" Grid.Row="2" Margin="10" Content="Add Input File" Click="addInputFileButton_Click" />
-                <Button x:Name="removeInputFileButton" Grid.Row="3" Margin="10" Content="Remove Input File" Click="removeInputFileButton_Click" />
-                <Button x:Name="mergeButton" Grid.Row="4" Margin="10" Content="Merge" Click="mergeButton_Click" />
             </Grid>
         </TabItem>
         <TabItem Header="Logs">

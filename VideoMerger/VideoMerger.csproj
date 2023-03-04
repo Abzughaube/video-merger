@@ -64,6 +64,9 @@
     </ApplicationDefinition>
     <Compile Include="DebugConverter.cs" />
     <Compile Include="FileItem.cs" />
+    <Compile Include="MediaplayerControl.xaml.cs">
+      <DependentUpon>MediaplayerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UIHelper.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="ViewModelBase.cs" />
@@ -79,6 +82,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MediaplayerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
