@@ -58,7 +58,7 @@
             </Grid>
         </TabItem>
         <TabItem Header="Logs">
-            <TextBox Name="LogBox" IsReadOnly="True" Text="{Binding ElementName=textBox1, Path=Text}"/>
+            <TextBox Name="LogBox" IsReadOnly="True" />
         </TabItem>
     </TabControl>
 </Window>

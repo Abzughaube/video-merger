@@ -12,15 +12,19 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <MediaElement Grid.Row="0" x:Name="mediaPlayer" LoadedBehavior="Manual" />
+        <MediaElement Grid.Row="0" x:Name="mediaPlayer" LoadedBehavior="Manual" ScrubbingEnabled="True"
+                      MediaOpened="MediaPlayer_OnMediaOpened" 
+                      MediaEnded="MediaPlayer_OnMediaEnded"/>
         <Slider Grid.Row="1" x:Name="timelineSlider"
-                Minimum="0" />
+                Minimum="0"
+                PreviewMouseLeftButtonDown="TimelineSlider_OnPreviewMouseLeftButtonDown"
+                PreviewMouseLeftButtonUp="TimelineSlider_OnPreviewMouseLeftButtonUp"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <Button x:Name="playButton" Content="Play" Click="PlayButton_Click" />
             <Button x:Name="pauseButton" Content="Pause" Click="PauseButton_Click" />
             <Button x:Name="stopButton" Content="Stop" Click="StopButton_Click" />
             <Label>Slider:</Label>
-            <TextBlock Text="{Binding ElementName=timelineSlider, Path=Value, Mode=OneWay}"/>
+            <TextBlock x:Name="watchingTb" />
         </StackPanel>
     </Grid>
 </UserControl>
