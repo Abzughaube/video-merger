@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -91,14 +89,6 @@ namespace VideoMerger
         {
             mediaPlayer.Stop();
             mediaPlayer.Source = new Uri(e.NewValue as string);
-
-            //Binding binding = new Binding("Position"); // CH: does not work because Position does not change while the video is runnig
-            //binding.Source = mediaPlayer;               // CH: the other way around it's also not working because there are triggered to many events to be processed per sec
-            //binding.Mode = BindingMode.TwoWay;      // CH: last problem: the slider does not move the value to the position the user moved to cursor to but the slider adds 1/removes 1 depending if the cursor is after or before the slider handle
-            //binding.Converter = new MillisecondsToMediaElementPositionConverter();
-            //BindingOperations.ClearBinding(timelineSlider, Slider.ValueProperty);
-
-            //timelineSlider.SetBinding(Slider.ValueProperty, binding);
         }
 
         public bool DidUserPlayVideo { get; private set; }
@@ -154,27 +144,6 @@ namespace VideoMerger
                 this.mediaPlayer.Play();
             }
             IsSliderMovedByUser = false;
-        }
-    }
-
-    public class MillisecondsToMediaElementPositionConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (!(value is TimeSpan))
-            {
-                return DependencyProperty.UnsetValue;
-            }
-            return ((TimeSpan)value).TotalMilliseconds;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (!(value is double))
-            {
-                return DependencyProperty.UnsetValue;
-            }
-            return TimeSpan.FromMilliseconds((double)value);
         }
     }
 }

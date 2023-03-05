@@ -35,7 +35,7 @@ namespace VideoTooling
         public static void CreateVideoPreview(string videoFilePath, string previewImagePath, out string processOutput)
         {
             var ffmpeg = new Process();
-            ffmpeg.StartInfo.FileName = @"D:\Temp\ffmpeg-5.1.2-full_build\bin\ffmpeg.exe";
+            ffmpeg.StartInfo.FileName = Path.Combine(FileSystem.GetAssemblyDirectory(), "ffmpeg.exe");
             ffmpeg.StartInfo.Arguments = $"-y -i \"{videoFilePath}\" -ss 00:00:01.000 -vframes 1 \"{previewImagePath}\"";
             //ffmpeg.StartInfo.UseShellExecute = false;
             //ffmpeg.StartInfo.CreateNoWindow = true;

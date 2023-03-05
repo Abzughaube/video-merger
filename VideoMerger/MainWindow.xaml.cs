@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using Microsoft.Win32;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Controls;
-using System.Windows.Media;
 using VideoTooling;
+using ICSharpCode.SharpZipLib.Zip;
+using System.Reflection;
+using System.Resources;
 
 namespace VideoMerger
 {
@@ -22,6 +23,55 @@ namespace VideoMerger
         {
             InitializeComponent();
             this.DataContext = ViewModel;
+            SetupFfmpeg();
+        }
+
+        private void SetupFfmpeg()
+        {
+            var assemblyDirectory = FileSystem.GetAssemblyDirectory();
+            if (File.Exists(Path.Combine(assemblyDirectory, "ffmpeg.exe")))
+            {
+                return;
+            }
+
+            try
+            {
+                ResourceManager objResMgr = new ResourceManager
+                    ("VideoMerger.Resource", Assembly.GetExecutingAssembly());
+                byte[] objData = (byte[])objResMgr.GetObject("ffmpeg");
+                MemoryStream objMS = new MemoryStream(objData);
+                ZipInputStream objZIP = new ZipInputStream(objMS);
+                ZipEntry theEntry;
+                while ((theEntry = objZIP.GetNextEntry()) != null)
+                {
+                    FileStream streamWriter =
+                        File.Create(Path.Combine(assemblyDirectory, theEntry.Name));
+                    int size = objData.Length;
+                    byte[] data = new byte[size];
+                    while (true)
+                    {
+                        size = objZIP.Read(data, 0, data.Length);
+                        if (size > 0)
+                        {
+                            streamWriter.Write(data, 0, size);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    streamWriter.Close();
+                }
+                objZIP.Close();
+            }
+            catch (MissingManifestResourceException mmre)
+            {
+                Console.WriteLine(mmre);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         private void addInputFileButton_Click(object sender, RoutedEventArgs e)
