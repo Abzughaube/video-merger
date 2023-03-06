@@ -84,11 +84,13 @@ namespace VideoMerger
                 foreach (var file in openFileDialog.FileNames)
                 {
                     string previewImagePath = Path.ChangeExtension(file, ".jpg");
-                    VideoTooling.Ffmpeg.CreateVideoPreview(file, previewImagePath, out var processOutput);
+                    Ffmpeg.CreateVideoPreview(file, previewImagePath, out var processOutput);
                     var fileItem = new FileItem { FilePath = file, PreviewImagePath = previewImagePath };
                     LogBox.AppendText(processOutput);
                     ViewModel.FileItems.Add(fileItem);
                 }
+
+                ViewModel.SelectedItem = ViewModel.FileItems.FirstOrDefault();
             }
 
         }
@@ -110,24 +112,30 @@ namespace VideoMerger
                 Ffmpeg.MergeFiles(ViewModel.FileItems.Select(fi => fi.FilePath), saveFileDialog.FileName, out var shellOutput);
             }
         }
-        private void moveUpButton_Click(object sender, RoutedEventArgs e)
+        private void moveLeftButton_Click(object sender, RoutedEventArgs e)
         {
             if (ViewModel.SelectedItem != null)
             {
                 var index = ViewModel.FileItems.IndexOf(ViewModel.SelectedItem);
+                if (index == 0)
+                {
+                    return;
+                }
+                var temp = ViewModel.SelectedItem;
                 ViewModel.FileItems.Remove(ViewModel.SelectedItem);
-                ViewModel.FileItems.Insert(index - 1, ViewModel.SelectedItem);
-                ViewModel.SelectedItem = ViewModel.SelectedItem;
+                ViewModel.FileItems.Insert(index - 1, temp);
+                ViewModel.SelectedItem = temp;
             }
         }
-        private void moveDownButton_Click(object sender, RoutedEventArgs e)
+        private void moveRightButton_Click(object sender, RoutedEventArgs e)
         {
             if (ViewModel.SelectedItem != null && ViewModel.FileItems.IndexOf(ViewModel.SelectedItem) < ViewModel.FileItems.Count - 1)
             {
                 var index = ViewModel.FileItems.IndexOf(ViewModel.SelectedItem);
+                var temp = ViewModel.SelectedItem;
                 ViewModel.FileItems.Remove(ViewModel.SelectedItem);
-                ViewModel.FileItems.Insert(index + 1, ViewModel.SelectedItem);
-                ViewModel.SelectedItem = ViewModel.SelectedItem;
+                ViewModel.FileItems.Insert(index + 1, temp);
+                ViewModel.SelectedItem = temp;
             }
         }
 
@@ -161,6 +169,7 @@ namespace VideoMerger
 
                 ViewModel.FileItems.Remove(fileItem);
                 ViewModel.FileItems.Insert(droppedIndex, fileItem);
+                ViewModel.SelectedItem = fileItem;
             }
         }
 

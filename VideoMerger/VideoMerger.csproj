@@ -92,6 +92,7 @@
     <Compile Include="MediaplayerControl.xaml.cs">
       <DependentUpon>MediaplayerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RangeSlider.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -113,6 +114,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MediaplayerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\RangeSlider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

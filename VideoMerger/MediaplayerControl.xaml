@@ -11,6 +11,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <MediaElement Grid.Row="0" x:Name="mediaPlayer" LoadedBehavior="Manual" ScrubbingEnabled="True"
                       MediaOpened="MediaPlayer_OnMediaOpened" 
@@ -19,7 +20,8 @@
                 Minimum="0"
                 PreviewMouseLeftButtonDown="TimelineSlider_OnPreviewMouseLeftButtonDown"
                 PreviewMouseLeftButtonUp="TimelineSlider_OnPreviewMouseLeftButtonUp"/>
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
+        <local:RangeSlider Grid.Row="2"></local:RangeSlider>
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
             <Button x:Name="playButton" Content="Play" Click="PlayButton_Click" />
             <Button x:Name="pauseButton" Content="Pause" Click="PauseButton_Click" />
             <Button x:Name="stopButton" Content="Stop" Click="StopButton_Click" />
