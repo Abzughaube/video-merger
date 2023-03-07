@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
-namespace VideoMerger
+namespace VideoMerger.Controls
 {
     public class RangeSlider : Control
     {

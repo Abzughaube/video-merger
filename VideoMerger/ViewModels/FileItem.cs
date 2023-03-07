@@ -1,4 +1,4 @@
-﻿namespace VideoMerger
+﻿namespace VideoMerger.ViewModels
 {
     public class FileItem : ViewModelBase
     {

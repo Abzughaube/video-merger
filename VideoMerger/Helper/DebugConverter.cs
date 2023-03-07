@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Data;
 
-namespace VideoMerger
+namespace VideoMerger.Helper
 {
     public class DebugConverter : IValueConverter
     {

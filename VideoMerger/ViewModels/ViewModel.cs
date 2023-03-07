@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace VideoMerger
+namespace VideoMerger.ViewModels
 {
     public class ViewModel : ViewModelBase
     {

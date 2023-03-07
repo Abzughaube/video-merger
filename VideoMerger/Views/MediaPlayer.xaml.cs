@@ -9,16 +9,16 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 
-namespace VideoMerger
+namespace VideoMerger.Views
 {
     /// <summary>
-    /// Interaktionslogik für MediaplayerControl.xaml
+    /// Interaktionslogik für MediaPlayer.xaml
     /// </summary>
-    public partial class MediaplayerControl : UserControl
+    public partial class MediaPlayer : UserControl
     {
         CompositeDisposable DisposableSubscriptions = new CompositeDisposable();
 
-        public MediaplayerControl()
+        public MediaPlayer()
         {
             InitializeComponent();
             _timelineSliderObservable = Observable
@@ -66,7 +66,7 @@ namespace VideoMerger
         }
 
         public static readonly DependencyProperty FilePathProperty =
-             DependencyProperty.Register("FilePath", typeof(string), typeof(MediaplayerControl), new
+             DependencyProperty.Register("FilePath", typeof(string), typeof(MediaPlayer), new
                 PropertyMetadata("", new PropertyChangedCallback(OnFilePathChanged)));
 
         private readonly IObservable<EventPattern<RoutedPropertyChangedEventArgs<double>>> _timelineSliderObservable;
@@ -81,7 +81,7 @@ namespace VideoMerger
         private static void OnFilePathChanged(DependencyObject d,
            DependencyPropertyChangedEventArgs e)
         {
-            var UserControl1Control = d as MediaplayerControl;
+            var UserControl1Control = d as MediaPlayer;
             UserControl1Control.OnFilePathChanged(e);
         }
 

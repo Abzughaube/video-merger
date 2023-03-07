@@ -1,7 +1,7 @@
-﻿using System.Windows.Media;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Media;
 
-namespace VideoMerger
+namespace VideoMerger.Helper
 {
     public static class UIHelper
     {

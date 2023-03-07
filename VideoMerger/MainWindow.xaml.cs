@@ -9,6 +9,8 @@ using VideoTooling;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Reflection;
 using System.Resources;
+using VideoMerger.Helper;
+using VideoMerger.ViewModels;
 
 namespace VideoMerger
 {

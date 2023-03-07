@@ -4,11 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VideoMerger"
+        xmlns:viewModels="clr-namespace:VideoMerger.ViewModels"
+        xmlns:views="clr-namespace:VideoMerger.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type local:FileItem}">
-            <local:MediaplayerControl FilePath="{Binding FilePath}" />
+        <DataTemplate DataType="{x:Type viewModels:FileItem}">
+            <views:MediaPlayer FilePath="{Binding FilePath}" />
         </DataTemplate>
     </Window.Resources>
     <TabControl>

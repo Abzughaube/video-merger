@@ -87,20 +87,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DebugConverter.cs" />
-    <Compile Include="FileItem.cs" />
-    <Compile Include="MediaplayerControl.xaml.cs">
-      <DependentUpon>MediaplayerControl.xaml</DependentUpon>
+    <Compile Include="Helper\DebugConverter.cs" />
+    <Compile Include="ViewModels\FileItem.cs" />
+    <Compile Include="Views\MediaPlayer.xaml.cs">
+      <DependentUpon>MediaPlayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RangeSlider.cs" />
+    <Compile Include="Controls\RangeSlider.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="UIHelper.cs" />
-    <Compile Include="ViewModel.cs" />
-    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="Helper\UIHelper.cs" />
+    <Compile Include="ViewModels\ViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -113,7 +113,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MediaplayerControl.xaml">
+    <Page Include="Views\MediaPlayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -160,5 +160,6 @@
       <Name>VideoTooling</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
