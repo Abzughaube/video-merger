@@ -1,7 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:VideoMerger"
-                    xmlns:videoMerger="clr-namespace:VideoMerger"
                     xmlns:controls="clr-namespace:VideoMerger.Controls">
     <Style TargetType="Thumb" x:Key="RangeSliderThumbStyle">
         <Setter Property="BorderThickness" Value="1"/>
@@ -78,7 +76,7 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <ControlTemplate TargetType="controls:RangeSlider" x:Key="RangeSliderVertialTemplate">
+    <ControlTemplate TargetType="controls:RangeSlider" x:Key="RangeSliderVerticalTemplate">
         <Border BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
                 Background="{TemplateBinding Background}" 
@@ -130,7 +128,7 @@
         <Setter Property="Template" Value="{StaticResource RangeSliderHorizontalTemplate}"/>
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Vertical">
-                <Setter Property="Template" Value="{StaticResource RangeSliderVertialTemplate}"/>
+                <Setter Property="Template" Value="{StaticResource RangeSliderVerticalTemplate}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

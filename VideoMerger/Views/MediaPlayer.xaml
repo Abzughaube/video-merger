@@ -21,14 +21,14 @@
                 Minimum="0"
                 PreviewMouseLeftButtonDown="TimelineSlider_OnPreviewMouseLeftButtonDown"
                 PreviewMouseLeftButtonUp="TimelineSlider_OnPreviewMouseLeftButtonUp"/>
-        <controls:RangeSlider Grid.Row="2" 
-                           Orientation="Horizontal"
-                           Height="20"
-                           Width="100"
-                           Maximum="1000" 
-                           Minimum="0"
-                           Start="0"
-                           End="1000" />
+        <controls:RangeSlider Grid.Row="2"
+                              Orientation="Horizontal"
+                              Maximum="25000" 
+                              Minimum="0"
+                              Start="0"
+                              End="25000"
+                              Height="18"
+                              HorizontalAlignment="Stretch"/>
         <StackPanel Grid.Row="3" Orientation="Horizontal">
             <Button x:Name="playButton" Content="Play" Click="PlayButton_Click" />
             <Button x:Name="pauseButton" Content="Pause" Click="PauseButton_Click" />
