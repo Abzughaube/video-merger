@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -8,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using VideoMerger.ViewModels;
 
 namespace VideoMerger.Views
 {
@@ -17,17 +19,20 @@ namespace VideoMerger.Views
     public partial class MediaPlayer : UserControl
     {
         CompositeDisposable DisposableSubscriptions = new CompositeDisposable();
+        private readonly IObservable<EventPattern<RoutedPropertyChangedEventArgs<double>>> _timelineSliderObservable;
+        private DispatcherTimer timerVideoTime;
 
         public MediaPlayer()
         {
             InitializeComponent();
+
             _timelineSliderObservable = Observable
                 .FromEventPattern<RoutedPropertyChangedEventHandler<double>, RoutedPropertyChangedEventArgs<double>>(
-                    h => timelineSlider.ValueChanged += h,
-                    h => timelineSlider.ValueChanged -= h);
+                    h => TimelineSlider.ValueChanged += h,
+                    h => TimelineSlider.ValueChanged -= h);
             DisposableSubscriptions.Add(_timelineSliderObservable
                 .Where(predicate => IsSliderMovedByUser)
-                .Buffer(TimeSpan.FromMilliseconds(500)).Subscribe(onNext));
+                .Buffer(TimeSpan.FromMilliseconds(500)).Subscribe(OnNext));
 
             timerVideoTime = new DispatcherTimer
             {
@@ -36,12 +41,12 @@ namespace VideoMerger.Views
             timerVideoTime.Tick += new EventHandler(timer_Tick);
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        private void timer_Tick(object sender, EventArgs e)
         {
-            timelineSlider.Value = mediaPlayer.Position.TotalMilliseconds;
+            TimelineSlider.Value = mediaPlayer.Position.TotalMilliseconds;
         }
 
-        private void onNext(IList<EventPattern<RoutedPropertyChangedEventArgs<double>>> values)
+        private void OnNext(IList<EventPattern<RoutedPropertyChangedEventArgs<double>>> values)
         {
             if (!values.Any())
             {
@@ -66,23 +71,35 @@ namespace VideoMerger.Views
         }
 
         public static readonly DependencyProperty FilePathProperty =
-             DependencyProperty.Register("FilePath", typeof(string), typeof(MediaPlayer), new
+             DependencyProperty.Register(nameof(FilePath), typeof(string), typeof(MediaPlayer), new
                 PropertyMetadata("", new PropertyChangedCallback(OnFilePathChanged)));
 
-        private readonly IObservable<EventPattern<RoutedPropertyChangedEventArgs<double>>> _timelineSliderObservable;
-        private DispatcherTimer timerVideoTime;
+        public static readonly DependencyProperty CropMarksCollectionProperty =
+            DependencyProperty.Register(nameof(CropMarksCollection), typeof(ObservableCollection<CropMarks>), typeof(MediaPlayer),
+                new PropertyMetadata(null, new PropertyChangedCallback(OnCropMarksCollectionChanged)));
 
         public string FilePath
         {
-            get { return (string)GetValue(FilePathProperty); }
-            set { SetValue(FilePathProperty, value); }
+            get => (string)GetValue(FilePathProperty);
+            set => SetValue(FilePathProperty, value);
+        }
+
+        public ObservableCollection<CropMarks> CropMarksCollection
+        {
+            get => (ObservableCollection<CropMarks>)GetValue(CropMarksCollectionProperty);
+            set => SetValue(CropMarksCollectionProperty, value);
         }
 
         private static void OnFilePathChanged(DependencyObject d,
            DependencyPropertyChangedEventArgs e)
         {
-            var UserControl1Control = d as MediaPlayer;
-            UserControl1Control.OnFilePathChanged(e);
+            var userControl1Control = d as MediaPlayer;
+            userControl1Control.OnFilePathChanged(e);
+        }
+
+        private static void OnCropMarksCollectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var userControl1Control = d as MediaPlayer;
         }
 
         private void OnFilePathChanged(DependencyPropertyChangedEventArgs e)
@@ -110,13 +127,13 @@ namespace VideoMerger.Views
         {
             mediaPlayer.Stop();
             timerVideoTime.Stop();
-            timelineSlider.Value = 0;
+            TimelineSlider.Value = 0;
             DidUserPlayVideo = false;
         }
 
         private void MediaPlayer_OnMediaOpened(object sender, RoutedEventArgs e)
         {
-            timelineSlider.Maximum = mediaPlayer.NaturalDuration.TimeSpan.TotalMilliseconds;
+            TimelineSlider.Maximum = mediaPlayer.NaturalDuration.TimeSpan.TotalMilliseconds;
 
             timerVideoTime.Start();
         }
@@ -125,7 +142,7 @@ namespace VideoMerger.Views
         {
             mediaPlayer.Stop();
             timerVideoTime.Stop();
-            timelineSlider.Value = 0;
+            TimelineSlider.Value = 0;
             DidUserPlayVideo = false;
         }
 
@@ -144,6 +161,14 @@ namespace VideoMerger.Views
                 this.mediaPlayer.Play();
             }
             IsSliderMovedByUser = false;
+        }
+
+        private void AddMarksButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.CropMarksCollection.Add(new CropMarks
+            {
+                Start = TimeSpan.Zero, End = TimeSpan.FromMilliseconds(TimelineSlider.Maximum)
+            });
         }
     }
 }

@@ -1,10 +1,15 @@
-﻿namespace VideoMerger.ViewModels
+﻿using System.Collections.ObjectModel;
+
+namespace VideoMerger.ViewModels
 {
     public class FileItem : ViewModelBase
     {
-        private string filePath;
-        private string previewImagePath;
+        public FileItem()
+        {
+            this.cropMarksCollection = new ObservableCollection<CropMarks>();
+        }
 
+        private string filePath;
         public string FilePath
         {
             get => filePath; set
@@ -14,11 +19,23 @@
             }
         }
 
+        private string previewImagePath;
         public string PreviewImagePath
         {
             get => previewImagePath; set
             {
                 previewImagePath = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<CropMarks> cropMarksCollection;
+        public ObservableCollection<CropMarks> CropMarksCollection
+        {
+            get => cropMarksCollection;
+            set
+            {
+                cropMarksCollection = value;
                 OnPropertyChanged();
             }
         }

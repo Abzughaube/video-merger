@@ -5,8 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VideoMerger"
              xmlns:controls="clr-namespace:VideoMerger.Controls"
+             xmlns:views="clr-namespace:VideoMerger.Views"
+             xmlns:helper="clr-namespace:VideoMerger.Helper"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <helper:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -25,25 +30,38 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="playButton" Content="Play" Click="PlayButton_Click" />
-                <Button x:Name="pauseButton" Content="Pause" Click="PauseButton_Click" />
-                <Button x:Name="stopButton" Content="Stop" Click="StopButton_Click" />
+                <Button x:Name="PlayButton" Content="Play" Click="PlayButton_Click" />
+                <Button x:Name="PauseButton" Content="Pause" Click="PauseButton_Click" />
+                <Button x:Name="StopButton" Content="Stop" Click="StopButton_Click" />
             </StackPanel>
-            <Slider Grid.Column="1" x:Name="timelineSlider"
+            <Slider Grid.Column="1" x:Name="TimelineSlider"
                     Minimum="0"
                     PreviewMouseLeftButtonDown="TimelineSlider_OnPreviewMouseLeftButtonDown"
                     PreviewMouseLeftButtonUp="TimelineSlider_OnPreviewMouseLeftButtonUp"/>
             <StackPanel Grid.Row="1" Grid.Column="0">
-                <Button Content="Add Crop Marks" />
+                <Button x:Name="AddMarksButton" Content="Add Crop Marks" Click="AddMarksButton_OnClick" />
             </StackPanel>
-            <controls:RangeSlider Grid.Row="1" Grid.Column="1"
-                                  Orientation="Horizontal"
-                                  Maximum="25000" 
-                                  Minimum="0"
-                                  Start="0"
-                                  End="25000"
-                                  Height="18"
-                                  HorizontalAlignment="Stretch"/>
+            <ListView Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Stretch"
+                      ItemsSource="{Binding CropMarksCollection, RelativeSource={RelativeSource FindAncestor, AncestorType=views:MediaPlayer}}">
+                <!--<ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>-->
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <controls:RangeSlider 
+                            Orientation="Horizontal"
+                            Maximum="{Binding ElementName=TimelineSlider, Path=Maximum, Mode=OneTime}" 
+                            Minimum="0"
+                            Start="{Binding Start, Converter={StaticResource TimeSpanToDoubleConverter}}"
+                            End="{Binding End, Converter={StaticResource TimeSpanToDoubleConverter}}"
+                            Height="18"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
     </Grid>
 </UserControl>
