@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+using VideoMerger.Helper;
 
 namespace VideoMerger.ViewModels
 {
@@ -8,6 +11,12 @@ namespace VideoMerger.ViewModels
         {
             this.cropMarksCollection = new ObservableCollection<CropMarks>();
         }
+
+        public ICommand AddCropMarksCommand =>
+            new RelayCommand(_ =>
+                CropMarksCollection.Add(new CropMarks
+                    { Start = TimeSpan.Zero, End = MediaLength }),
+                _ => CropMarksCollection.Count < 1);
 
         private string filePath;
         public string FilePath
@@ -36,6 +45,17 @@ namespace VideoMerger.ViewModels
             set
             {
                 cropMarksCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private TimeSpan mediaLength;
+        public TimeSpan MediaLength
+        {
+            get => mediaLength;
+            set
+            {
+                mediaLength = value;
                 OnPropertyChanged();
             }
         }

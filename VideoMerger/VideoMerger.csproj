@@ -89,6 +89,7 @@
     </ApplicationDefinition>
     <Compile Include="CustomControl1.cs" />
     <Compile Include="Helper\DebugConverter.cs" />
+    <Compile Include="Helper\RelayCommand.cs" />
     <Compile Include="Helper\TimeSpanToDoubleConverter.cs" />
     <Compile Include="ViewModels\CropMarks.cs" />
     <Compile Include="ViewModels\FileItem.cs" />

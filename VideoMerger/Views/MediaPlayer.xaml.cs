@@ -43,7 +43,7 @@ namespace VideoMerger.Views
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            TimelineSlider.Value = mediaPlayer.Position.TotalMilliseconds;
+            TimelineSlider.Value = MediaElement.Position.TotalMilliseconds;
         }
 
         private void OnNext(IList<EventPattern<RoutedPropertyChangedEventArgs<double>>> values)
@@ -59,7 +59,7 @@ namespace VideoMerger.Views
             {
                 try
                 {
-                    mediaPlayer.Position = TimeSpan.FromMilliseconds(newValue);
+                    MediaElement.Position = TimeSpan.FromMilliseconds(newValue);
                 }
                 catch (Exception e)
                 {
@@ -70,77 +70,57 @@ namespace VideoMerger.Views
 
         }
 
-        public static readonly DependencyProperty FilePathProperty =
-             DependencyProperty.Register(nameof(FilePath), typeof(string), typeof(MediaPlayer), new
-                PropertyMetadata("", new PropertyChangedCallback(OnFilePathChanged)));
+        public static readonly DependencyProperty FileItemProperty =
+            DependencyProperty.Register(nameof(FileItem), typeof(FileItem), typeof(MediaPlayer),
+                new PropertyMetadata(null, new PropertyChangedCallback(OnFileItemChanged)));
 
-        public static readonly DependencyProperty CropMarksCollectionProperty =
-            DependencyProperty.Register(nameof(CropMarksCollection), typeof(ObservableCollection<CropMarks>), typeof(MediaPlayer),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnCropMarksCollectionChanged)));
-
-        public string FilePath
+        private static void OnFileItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            get => (string)GetValue(FilePathProperty);
-            set => SetValue(FilePathProperty, value);
+            var mediaPlayer = d as MediaPlayer;
+            mediaPlayer.MediaElement.Stop();
+            mediaPlayer.MediaElement.Source = new Uri(((FileItem)e.NewValue).FilePath);
         }
 
-        public ObservableCollection<CropMarks> CropMarksCollection
+        public FileItem FileItem
         {
-            get => (ObservableCollection<CropMarks>)GetValue(CropMarksCollectionProperty);
-            set => SetValue(CropMarksCollectionProperty, value);
-        }
-
-        private static void OnFilePathChanged(DependencyObject d,
-           DependencyPropertyChangedEventArgs e)
-        {
-            var userControl1Control = d as MediaPlayer;
-            userControl1Control.OnFilePathChanged(e);
-        }
-
-        private static void OnCropMarksCollectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var userControl1Control = d as MediaPlayer;
-        }
-
-        private void OnFilePathChanged(DependencyPropertyChangedEventArgs e)
-        {
-            mediaPlayer.Stop();
-            mediaPlayer.Source = new Uri(e.NewValue as string);
+            get => (FileItem)GetValue(FileItemProperty);
+            set => SetValue(FileItemProperty, value);
         }
 
         public bool DidUserPlayVideo { get; private set; }
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            mediaPlayer.Play();
+            MediaElement.Play();
             timerVideoTime.Start();
             DidUserPlayVideo = true;
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
         {
-            mediaPlayer.Pause();
+            MediaElement.Pause();
             timerVideoTime.Stop();
             DidUserPlayVideo = false;
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            mediaPlayer.Stop();
+            MediaElement.Stop();
             timerVideoTime.Stop();
             TimelineSlider.Value = 0;
             DidUserPlayVideo = false;
         }
 
-        private void MediaPlayer_OnMediaOpened(object sender, RoutedEventArgs e)
+        private void MediaElement_OnMediaOpened(object sender, RoutedEventArgs e)
         {
-            TimelineSlider.Maximum = mediaPlayer.NaturalDuration.TimeSpan.TotalMilliseconds;
+            FileItem.MediaLength = MediaElement.NaturalDuration.TimeSpan;
+            TimelineSlider.Maximum = FileItem.MediaLength.TotalMilliseconds;
 
             timerVideoTime.Start();
         }
 
-        private void MediaPlayer_OnMediaEnded(object sender, RoutedEventArgs e)
+        private void MediaElement_OnMediaEnded(object sender, RoutedEventArgs e)
         {
-            mediaPlayer.Stop();
+            MediaElement.Stop();
             timerVideoTime.Stop();
             TimelineSlider.Value = 0;
             DidUserPlayVideo = false;
@@ -150,7 +130,7 @@ namespace VideoMerger.Views
 
         private void TimelineSlider_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.mediaPlayer.Pause();
+            this.MediaElement.Pause();
             IsSliderMovedByUser = true;
         }
 
@@ -158,14 +138,14 @@ namespace VideoMerger.Views
         {
             if (DidUserPlayVideo)
             {
-                this.mediaPlayer.Play();
+                this.MediaElement.Play();
             }
             IsSliderMovedByUser = false;
         }
 
         private void AddMarksButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.CropMarksCollection.Add(new CropMarks
+            this.FileItem.CropMarksCollection.Add(new CropMarks
             {
                 Start = TimeSpan.Zero, End = TimeSpan.FromMilliseconds(TimelineSlider.Maximum)
             });

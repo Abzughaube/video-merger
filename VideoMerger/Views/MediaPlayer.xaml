@@ -8,7 +8,8 @@
              xmlns:views="clr-namespace:VideoMerger.Views"
              xmlns:helper="clr-namespace:VideoMerger.Helper"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="MediaPlayerControl">
     <UserControl.Resources>
         <helper:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter"/>
     </UserControl.Resources>
@@ -17,9 +18,9 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <MediaElement Grid.Row="0" x:Name="mediaPlayer" LoadedBehavior="Manual" ScrubbingEnabled="True"
-                      MediaOpened="MediaPlayer_OnMediaOpened" 
-                      MediaEnded="MediaPlayer_OnMediaEnded"/>
+        <MediaElement Grid.Row="0" x:Name="MediaElement" LoadedBehavior="Manual" ScrubbingEnabled="True"
+                      MediaOpened="MediaElement_OnMediaOpened" 
+                      MediaEnded="MediaElement_OnMediaEnded"/>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -29,6 +30,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="PlayButton" Content="Play" Click="PlayButton_Click" />
                 <Button x:Name="PauseButton" Content="Pause" Click="PauseButton_Click" />
@@ -38,26 +40,25 @@
                     Minimum="0"
                     PreviewMouseLeftButtonDown="TimelineSlider_OnPreviewMouseLeftButtonDown"
                     PreviewMouseLeftButtonUp="TimelineSlider_OnPreviewMouseLeftButtonUp"/>
+
             <StackPanel Grid.Row="1" Grid.Column="0">
-                <Button x:Name="AddMarksButton" Content="Add Crop Marks" Click="AddMarksButton_OnClick" />
+                <Button x:Name="AddMarksButton" Content="Add Crop Marks"
+                        Command="{Binding ElementName=MediaPlayerControl, Path=FileItem.AddCropMarksCommand}"
+                        CommandParameter=""/>
             </StackPanel>
-            <ListView Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Stretch"
-                      ItemsSource="{Binding CropMarksCollection, RelativeSource={RelativeSource FindAncestor, AncestorType=views:MediaPlayer}}">
-                <!--<ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical"></StackPanel>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>-->
+            <ListView Grid.Row="1" Grid.Column="1"
+                      HorizontalContentAlignment="Stretch"
+                      ItemsSource="{Binding ElementName=MediaPlayerControl, Path=FileItem.CropMarksCollection}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <controls:RangeSlider 
-                            Orientation="Horizontal"
-                            Maximum="{Binding ElementName=TimelineSlider, Path=Maximum, Mode=OneTime}" 
-                            Minimum="0"
-                            Start="{Binding Start, Converter={StaticResource TimeSpanToDoubleConverter}}"
-                            End="{Binding End, Converter={StaticResource TimeSpanToDoubleConverter}}"
-                            Height="18"/>
+                                Orientation="Horizontal"
+                                Maximum="{Binding ElementName=MediaPlayerControl, Path=FileItem.MediaLength, Mode=OneTime, Converter={StaticResource TimeSpanToDoubleConverter}}" 
+                                Minimum="0"
+                                Start="{Binding Start, Converter={StaticResource TimeSpanToDoubleConverter}}"
+                                End="{Binding End, Converter={StaticResource TimeSpanToDoubleConverter}}"
+                                Height="18"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

@@ -10,7 +10,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:FileItem}">
-            <views:MediaPlayer FilePath="{Binding FilePath}" CropMarksCollection="{Binding CropMarksCollection}" />
+            <views:MediaPlayer FileItem="{Binding}" />
         </DataTemplate>
     </Window.Resources>
     <TabControl>
@@ -32,8 +32,6 @@
                     </ContentControl.Content>
                 </ContentControl>
 
-                <!--ContentTemplate="{StaticResource NoFileSelectedTemplate}-->
-
                 <ListView Grid.Row="1" Margin="10" SelectionMode="Extended" AllowDrop="True"
                           PreviewMouseLeftButtonDown="inputFilesListView_PreviewMouseLeftButtonDown" 
                           PreviewMouseMove="inputFilesListView_PreviewMouseMove" 
@@ -52,7 +50,6 @@
                                         <BitmapImage UriSource="{Binding PreviewImagePath}"/>
                                     </Image.Source>
                                 </Image>
-                                <!--<TextBlock Text="{Binding FilePath}" Margin="10,0,0,0"/>-->
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
