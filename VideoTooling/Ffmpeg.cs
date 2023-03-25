@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -52,6 +53,26 @@ namespace VideoTooling
             //var error = ffmpeg.StandardError.ReadToEnd();
             ffmpeg.WaitForExit();
             processOutput = output + Environment.NewLine + error;
+        }
+
+        public static TimeSpan ReadVideoLength(string videoFilePath)
+        {
+            var ffprobe = new Process();
+            ffprobe.StartInfo.FileName = Path.Combine(FileSystem.GetAssemblyDirectory(), "ffprobe.exe");
+            ffprobe.StartInfo.Arguments = $"-i \"{videoFilePath}\" -show_entries format=duration -v quiet -of csv=\"p=0\"";
+            ffprobe.StartInfo.UseShellExecute = false;
+            ffprobe.StartInfo.CreateNoWindow = true;
+            ffprobe.StartInfo.RedirectStandardOutput = true;
+            ffprobe.StartInfo.RedirectStandardError = true;
+            ffprobe.Start();
+
+            var output = ffprobe.StandardOutput.ReadToEnd();
+            var error = ffprobe.StandardError.ReadToEnd();
+
+            ffprobe.WaitForExit();
+
+            var videoLengthInSeconds = double.Parse(output.Trim(), CultureInfo.InvariantCulture);
+            return TimeSpan.FromSeconds(videoLengthInSeconds);
         }
     }
 }

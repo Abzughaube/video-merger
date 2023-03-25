@@ -87,7 +87,8 @@ namespace VideoMerger
                 {
                     string previewImagePath = Path.ChangeExtension(file, ".jpg");
                     Ffmpeg.CreateVideoPreview(file, previewImagePath, out var processOutput);
-                    var fileItem = new FileItem { FilePath = file, PreviewImagePath = previewImagePath };
+                    var videoLength = Ffmpeg.ReadVideoLength(file);
+                    var fileItem = new FileItem { FilePath = file, PreviewImagePath = previewImagePath, MediaLength = videoLength};
                     LogBox.AppendText(processOutput);
                     ViewModel.FileItems.Add(fileItem);
                 }

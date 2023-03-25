@@ -116,7 +116,6 @@ namespace VideoMerger.Views
 
         private void MediaElement_OnMediaOpened(object sender, RoutedEventArgs e)
         {
-            FileItem.MediaLength = MediaElement.NaturalDuration.TimeSpan;
             TimelineSlider.Maximum = FileItem.MediaLength.TotalMilliseconds;
 
             timerVideoTime.Start();
