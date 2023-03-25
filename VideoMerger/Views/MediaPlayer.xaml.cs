@@ -76,6 +76,10 @@ namespace VideoMerger.Views
 
         private static void OnFileItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            if (e.NewValue == null)
+            {
+                return;
+            }
             var mediaPlayer = d as MediaPlayer;
             mediaPlayer.MediaElement.Stop();
             mediaPlayer.MediaElement.Source = new Uri(((FileItem)e.NewValue).FilePath);
@@ -145,9 +149,10 @@ namespace VideoMerger.Views
 
         private void AddMarksButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.FileItem.CropMarksCollection.Add(new CropMarks
+            this.FileItem.CropMarksCollection.Add(new CropMarksAdapter
             {
-                Start = TimeSpan.Zero, End = TimeSpan.FromMilliseconds(TimelineSlider.Maximum)
+                Start = TimeSpan.Zero,
+                End = TimeSpan.FromMilliseconds(TimelineSlider.Maximum)
             });
         }
     }

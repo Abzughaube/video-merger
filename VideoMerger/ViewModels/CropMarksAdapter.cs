@@ -1,29 +1,31 @@
 ﻿using System;
+using VideoTooling;
 
 namespace VideoMerger.ViewModels
 {
-    public class CropMarks : ViewModelBase
+    public class CropMarksAdapter : ViewModelBase
     {
-        private TimeSpan start;
+        private CropMarks cropMarks = new CropMarks();
         public TimeSpan Start
         {
-            get => start;
+            get => cropMarks.Start;
             set
             {
-                start = value;
+                cropMarks.Start = value;
                 OnPropertyChanged();
             } 
         }
 
-        private TimeSpan end;
         public TimeSpan End
         {
-            get => end;
+            get => cropMarks.End;
             set
             {
-                end = value;
+                cropMarks.End = value;
                 OnPropertyChanged();
             }
         }
+
+        public CropMarks GetCropMarks => cropMarks;
     }
 }

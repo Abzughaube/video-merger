@@ -9,12 +9,12 @@ namespace VideoMerger.ViewModels
     {
         public FileItem()
         {
-            this.cropMarksCollection = new ObservableCollection<CropMarks>();
+            this.cropMarksCollection = new ObservableCollection<CropMarksAdapter>();
         }
 
         public ICommand AddCropMarksCommand =>
             new RelayCommand(_ =>
-                CropMarksCollection.Add(new CropMarks
+                CropMarksCollection.Add(new CropMarksAdapter
                     { Start = TimeSpan.Zero, End = MediaLength }),
                 _ => CropMarksCollection.Count < 1);
 
@@ -38,8 +38,8 @@ namespace VideoMerger.ViewModels
             }
         }
 
-        private ObservableCollection<CropMarks> cropMarksCollection;
-        public ObservableCollection<CropMarks> CropMarksCollection
+        private ObservableCollection<CropMarksAdapter> cropMarksCollection;
+        public ObservableCollection<CropMarksAdapter> CropMarksCollection
         {
             get => cropMarksCollection;
             set

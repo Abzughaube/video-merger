@@ -43,8 +43,7 @@
 
             <StackPanel Grid.Row="1" Grid.Column="0">
                 <Button x:Name="AddMarksButton" Content="Add Crop Marks"
-                        Command="{Binding ElementName=MediaPlayerControl, Path=FileItem.AddCropMarksCommand}"
-                        CommandParameter=""/>
+                        Command="{Binding ElementName=MediaPlayerControl, Path=FileItem.AddCropMarksCommand}"/>
             </StackPanel>
             <ListView Grid.Row="1" Grid.Column="1"
                       HorizontalContentAlignment="Stretch"

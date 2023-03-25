@@ -101,7 +101,12 @@ namespace VideoMerger
         {
             if (ViewModel.SelectedItem != null)
             {
+                var index = ViewModel.FileItems.IndexOf(ViewModel.SelectedItem);
                 ViewModel.FileItems.Remove(ViewModel.SelectedItem);
+                if (ViewModel.FileItems.Any())
+                {
+                    ViewModel.SelectedItem = ViewModel.FileItems[index - 1 >= 0 ? index - 1 : index];
+                }
             }
         }
 
@@ -111,7 +116,17 @@ namespace VideoMerger
             saveFileDialog.Filter = "MP4 Files (*.mp4)|*.mp4|MPEG Files (*.mpg)|*.mpg|All Files (*.*)|*.*";
             if (saveFileDialog.ShowDialog() == true)
             {
-                Ffmpeg.MergeFiles(ViewModel.FileItems.Select(fi => fi.FilePath), saveFileDialog.FileName, out var shellOutput);
+                var mergeInfo = new MergeInfo
+                {
+                    OutputFilePath = saveFileDialog.FileName,
+                    VideoInfos = ViewModel.FileItems.Select(fi => new VideoInfo
+                    {
+                        InputFilePath = fi.FilePath,
+                        CropMarksCollection = fi.CropMarksCollection.Select(cm => cm.GetCropMarks).ToList()
+                    }).ToList()
+                };
+
+                Ffmpeg.MergeFiles(mergeInfo, out var shellOutput);
             }
         }
         private void moveLeftButton_Click(object sender, RoutedEventArgs e)
