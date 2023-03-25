@@ -158,6 +158,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Resources\ffmpeg.zip" />
+    <None Include="Resources\ffprobe.zip" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -14,9 +14,6 @@ using VideoMerger.ViewModels;
 
 namespace VideoMerger
 {
-    /// <summary>
-    /// Interaktionslogik für MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         internal ViewModel ViewModel { get; set; } = new ViewModel();
@@ -25,55 +22,52 @@ namespace VideoMerger
         {
             InitializeComponent();
             this.DataContext = ViewModel;
-            SetupFfmpeg();
+            SetupVideoTooling();
         }
 
-        private void SetupFfmpeg()
+        private void SetupVideoTooling()
+        {
+            ExtractVideoToolingFromResources("ffmpeg.exe");
+            ExtractVideoToolingFromResources("ffprobe.exe");
+        }
+
+        private static void ExtractVideoToolingFromResources(string filename)
         {
             var assemblyDirectory = FileSystem.GetAssemblyDirectory();
-            if (File.Exists(Path.Combine(assemblyDirectory, "ffmpeg.exe")))
+            if (File.Exists(Path.Combine(assemblyDirectory, filename)))
             {
                 return;
             }
 
-            try
+            var objResMgr = new ResourceManager
+                ("VideoMerger.Resource", Assembly.GetExecutingAssembly());
+            var objData = (byte[])objResMgr.GetObject(Path.GetFileNameWithoutExtension(filename));
+            var objMS = new MemoryStream(objData);
+            var objZIP = new ZipInputStream(objMS);
+            ZipEntry theEntry;
+            while ((theEntry = objZIP.GetNextEntry()) != null)
             {
-                ResourceManager objResMgr = new ResourceManager
-                    ("VideoMerger.Resource", Assembly.GetExecutingAssembly());
-                byte[] objData = (byte[])objResMgr.GetObject("ffmpeg");
-                MemoryStream objMS = new MemoryStream(objData);
-                ZipInputStream objZIP = new ZipInputStream(objMS);
-                ZipEntry theEntry;
-                while ((theEntry = objZIP.GetNextEntry()) != null)
+                var streamWriter =
+                    File.Create(Path.Combine(assemblyDirectory, theEntry.Name));
+                var size = objData.Length;
+                var data = new byte[size];
+                while (true)
                 {
-                    FileStream streamWriter =
-                        File.Create(Path.Combine(assemblyDirectory, theEntry.Name));
-                    int size = objData.Length;
-                    byte[] data = new byte[size];
-                    while (true)
+                    size = objZIP.Read(data, 0, data.Length);
+                    if (size > 0)
                     {
-                        size = objZIP.Read(data, 0, data.Length);
-                        if (size > 0)
-                        {
-                            streamWriter.Write(data, 0, size);
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        streamWriter.Write(data, 0, size);
                     }
-                    streamWriter.Close();
+                    else
+                    {
+                        break;
+                    }
                 }
-                objZIP.Close();
+
+                streamWriter.Close();
             }
-            catch (MissingManifestResourceException mmre)
-            {
-                Console.WriteLine(mmre);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+
+            objZIP.Close();
         }
 
         private void addInputFileButton_Click(object sender, RoutedEventArgs e)
@@ -88,7 +82,7 @@ namespace VideoMerger
                     string previewImagePath = Path.ChangeExtension(file, ".jpg");
                     Ffmpeg.CreateVideoPreview(file, previewImagePath, out var processOutput);
                     var videoLength = Ffmpeg.ReadVideoLength(file);
-                    var fileItem = new FileItem { FilePath = file, PreviewImagePath = previewImagePath, MediaLength = videoLength};
+                    var fileItem = new FileItem { FilePath = file, PreviewImagePath = previewImagePath, MediaLength = videoLength };
                     LogBox.AppendText(processOutput);
                     ViewModel.FileItems.Add(fileItem);
                 }
